@@ -1,0 +1,2 @@
+Câu 1: Nếu người dùng chọn "Cancel" màn hình vẫn sẽ hiển thị “You have chosen No”.
+Câu 2: Nếu muốn tùy chỉnh các nút chỉ hiển thị "Yes" và "No", hoặc thay đổi thành "I do" và "I don't" thì ta cần sử dụng phương thức JOptionPane.showOptionDialog. Trong phương thức này ta có thể thay đổi các nút bằng cách truyền vào mảng Object[] options các nội dung nút theo ý muốn.
