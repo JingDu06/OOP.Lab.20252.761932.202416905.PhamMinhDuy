@@ -45,7 +45,11 @@ public class Cart {
         }
         return total;
     }
+<<<<<<< HEAD
     public void addDigitalVideoDisc(DigitalVideoDisc [] dvdList) {
     	//Over-loading
     }
 }
+=======
+}
+>>>>>>> 920816d (add overloading)

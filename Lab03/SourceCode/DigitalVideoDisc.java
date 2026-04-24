@@ -38,4 +38,10 @@ public class DigitalVideoDisc {
         this(director, category, title, cost); 
         this.length = length;
     }
+<<<<<<< HEAD
+=======
+    public void addDigitalVideoDisc(DigitalVideoDisc [] dvdList) {
+    	//Over-loading
+    }
+>>>>>>> 920816d (add overloading)
 }
