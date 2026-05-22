@@ -1,0 +1,77 @@
+Question 1: Which classes are aggregates of other classes? Checking all constructors of whole classes if they initialize for their parts?
+
+Trả lời:
+CompactDisc là lớp aggregate của Track vì CompactDisc chứa danh sách các Track.
+Cart là lớp aggregate của Media vì Cart chứa danh sách các Media.
+Store là lớp aggregate của Media vì Store quản lý danh sách Media.
+Book là lớp aggregate của Author dưới dạng String author.
+
+Các constructor của lớp whole nên khởi tạo các thành phần part tương ứng.
+CompactDisc nên khởi tạo ArrayList<Track>.
+Cart nên khởi tạo ArrayList<Media>.
+Store nên khởi tạo ArrayList<Media>.
+Việc này giúp tránh lỗi NullPointerException khi thao tác với danh sách.
+
+Question 2: What happens when calling toString() method with polymorphism?
+
+Trả lời:
+Khi gọi phương thức toString() thông qua biến kiểu Media, Java sẽ thực hiện polymorphism.
+Tùy theo kiểu thực tế của đối tượng như Book, CompactDisc hay DigitalVideoDisc, phương thức toString() tương ứng sẽ được gọi.
+
+Nếu một đối tượng Book được lưu trong ArrayList<Media>, khi gọi:
+m.toString()
+
+thì Java sẽ tự động gọi Book.toString() thay vì Media.toString().
+
+Điều này cho phép cùng một câu lệnh nhưng tạo ra các kết quả khác nhau tùy loại đối tượng.
+
+Question 3: What class should implement the Comparable interface?
+
+Trả lời:
+Lớp Media nên implement Comparable<Media> vì tất cả các loại media như Book, CompactDisc và DigitalVideoDisc đều kế thừa từ Media.
+
+Question 4: How should compareTo() be implemented to reflect the ordering rule?
+
+Trả lời:
+Phương thức compareTo() có thể được cài đặt để so sánh theo title trước.
+Nếu title giống nhau thì tiếp tục so sánh theo cost.
+
+Ví dụ:
+return this.title.compareTo(other.title);
+
+Nếu title bằng nhau:
+return Float.compare(this.cost, other.cost);
+
+Question 5: Can we have two ordering rules if we use Comparable interface?
+
+Trả lời:
+Không thuận tiện.
+
+Comparable chỉ cho phép một cách sắp xếp mặc định thông qua compareTo().
+Nếu muốn nhiều cách sắp xếp khác nhau như:
+title rồi cost
+cost rồi title
+
+thì dùng Comparator sẽ phù hợp hơn.
+
+Question 6: Suppose DVDs have a different ordering rule from other media types. How would you modify your code?
+
+Trả lời:
+Ta nên tạo một Comparator riêng cho DVD.
+
+Ví dụ:
+MediaComparatorByTitleCost
+MediaComparatorByCostTitle
+DVDComparatorByTitleLengthCost
+
+Comparator riêng giúp mỗi loại đối tượng có thể có quy tắc sắp xếp khác nhau mà không ảnh hưởng tới các lớp khác.
+
+Question 7: If the passing object is not an instance of Media, what happens?
+
+Trả lời:
+Nếu object truyền vào không phải instance của Media thì phép ép kiểu sẽ không hợp lệ.
+
+Vì vậy cần kiểm tra:
+if (!(obj instanceof Media))
+
+Nếu không kiểm tra trước khi ép kiểu, chương trình có thể gây ra lỗi ClassCastException.
