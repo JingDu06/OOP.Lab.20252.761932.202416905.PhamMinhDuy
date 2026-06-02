@@ -1,0 +1,40 @@
+1. Is Java pass by value or pass by reference?
+
+Java hoàn toàn là truyền theo giá trị (pass by value).
+Đối với kiểu nguyên thủy (primitive), giá trị thực được sao chép.
+Đối với đối tượng (object), giá trị của tham chiếu được sao chép, không phải bản thân đối tượng.
+
+2. Why swap(jungleDVD, cinderellaDVD) does not work?
+
+Vì Java truyền tham chiếu đối tượng theo kiểu giá trị.
+Phương thức swap chỉ hoán đổi các bản sao của tham chiếu bên trong hàm,
+không ảnh hưởng đến các đối tượng gốc bên ngoài.
+
+3. Why changeTitle works?
+
+Vì phương thức này thay đổi trạng thái bên trong của đối tượng thông qua tham chiếu.
+Mặc dù tham chiếu được truyền theo giá trị, nhưng nó vẫn trỏ tới cùng một đối tượng,
+nên các thay đổi sẽ ảnh hưởng đến đối tượng ban đầu.
+
+4. Varargs vs Array parameter?
+
+Varargs (DigitalVideoDisc... dvds) linh hoạt và tiện lợi hơn.
+Nó cho phép truyền nhiều tham số mà không cần tạo mảng thủ công.
+Vì vậy, varargs thường được ưu tiên sử dụng.
+
+5. Difference between String and StringBuilder?
+
+String là bất biến (immutable), nghĩa là mỗi lần thay đổi sẽ tạo ra một đối tượng mới.
+StringBuilder là có thể thay đổi (mutable), cho phép chỉnh sửa trên cùng một đối tượng.
+StringBuilder hiệu quả hơn trong các vòng lặp hoặc khi nối chuỗi nhiều lần.
+
+6. Difference between static and instance variables?
+
+Biến static thuộc về lớp và được chia sẻ giữa tất cả các đối tượng.
+Biến instance thuộc về từng đối tượng riêng biệt.
+Biến static tồn tại ngay cả khi chưa tạo đối tượng nào.
+
+7. Why do we need nbDigitalVideoDiscs?
+
+Để tự động gán ID duy nhất cho mỗi DVD.
+Nó giúp theo dõi số lượng đối tượng DVD đã được tạo ra.

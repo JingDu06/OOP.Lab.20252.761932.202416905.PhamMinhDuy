@@ -1,0 +1,54 @@
+1. So sánh Swing và AWT:
+- Top-level container: AWT dùng Frame/Applet/Dialog, Swing dùng JFrame/JApplet/JDialog.
+- Tên component: AWT thường là Button, Label, TextField; Swing thường thêm tiền tố J như JButton, JLabel, JTextField.
+- Lightweight/heavyweight: AWT là heavyweight vì phụ thuộc native peer của hệ điều hành; phần lớn Swing là lightweight nên linh hoạt và đồng nhất hơn.
+- Content pane: Với Swing, ta thường thêm component vào content pane của JFrame; AWT Frame có thể add trực tiếp component.
+
+2. Vì sao JavaFX TableView cần ObservableList?
+TableView cần ObservableList để tự nhận thông báo khi dữ liệu thêm, xóa hoặc thay đổi, từ đó cập nhật giao diện mà không phải refresh thủ công nhiều.
+
+3. Nếu không catch PlayerException thì chuyện gì xảy ra?
+PlayerException là checked exception. Nếu không catch hoặc không khai báo throws, code sẽ không compile. Nếu đã khai báo throws lên trên mà không xử lý, lỗi có thể làm luồng chạy bị dừng khi phát media lỗi.
+
+4. PlayerException dùng để làm gì?
+PlayerException biểu diễn lỗi khi phát media, ví dụ DVD/CD/Track có length không hợp lệ. Nó tách lỗi nghiệp vụ play khỏi lỗi nhập liệu hoặc lỗi giao diện.
+
+5. Hai media bằng nhau khi nào?
+Hai media được xem là bằng nhau khi chúng đều là Media và có cùng title. Việc so sánh dùng instanceof và Objects.equals để tránh ClassCastException và NullPointerException.
+
+6. Các phần GUI đã làm trong Lab05:
+- AWTAccumulator.
+- SwingAccumulator.
+- NumberGrid với nút số, DEL và C.
+- JavaFX Painter có vùng vẽ, Clear, Pen và Eraser.
+- StoreScreen hiển thị store bằng Swing.
+- MediaStore có Add to cart và Play cho media playable.
+- CartScreen nhúng JavaFX bằng JFXPanel và load cart.fxml.
+- CartScreenController quản lý TableView, Play, Remove, Place Order, total cost và filter đơn giản.
+- Các màn hình Add Book, Add CD, Add DVD bằng Swing.
+
+7. Phần optional/chưa làm:
+- Không làm lucky item.
+- Không làm sort media in cart trên GUI.
+- Không làm search media in store.
+- Không làm remove media from store trên GUI.
+- Không làm các phần optional như lucky item, sort media in cart trên GUI, search media in store và remove media from store trên GUI. Use case diagram, class diagram, exception hierarchy và report có hình đã được cập nhật.
+
+8. Các quan hệ aggregate/composition chính trong AIMS:
+- Cart chứa danh sách Media trong giỏ hàng.
+- Store chứa danh sách Media trong cửa hàng.
+- CompactDisc chứa danh sách Track.
+- Book chứa danh sách authors.
+Các danh sách này cần được khởi tạo trước khi gọi add/remove/contains để tránh NullPointerException.
+
+9. Vì sao toString() thể hiện polymorphism?
+Khi duyệt một danh sách Media nhưng phần tử thật là Book, DVD hoặc CD, lời gọi m.toString() sẽ chạy phiên bản toString() của class thật tại runtime. Nhờ vậy Cart/Store chỉ cần làm việc với kiểu chung Media.
+
+10. Comparable và Comparator khác nhau thế nào trong bài này?
+Comparable chỉ cho một natural ordering mặc định trong class. Comparator phù hợp hơn vì cart có thể cần nhiều quy tắc sắp xếp khác nhau như title rồi cost hoặc cost rồi title.
+
+11. Nếu DVD cần quy tắc sắp xếp riêng thì làm thế nào?
+Nên tạo Comparator riêng cho DigitalVideoDisc hoặc Comparator<Media> có kiểm tra instanceof. Ví dụ DVD có thể sort theo title, rồi length giảm dần, rồi cost.
+
+12. Vai trò của Media và Playable:
+Media là abstract class gom các thuộc tính chung như id, title, category, cost. Playable là interface cho các đối tượng có thể phát được như DigitalVideoDisc, CompactDisc và Track; Book không implement Playable.
