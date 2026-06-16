@@ -15,7 +15,7 @@ import view.screen.SimulationScreen;
 
 public class Simulation {
 
-    private static final int DEFAULT_MAX_TICKS = 120;
+        private static final int DEFAULT_MAX_TICKS = 120;
 
     private SimulationController controller;
 

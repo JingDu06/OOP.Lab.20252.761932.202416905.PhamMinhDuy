@@ -77,6 +77,19 @@ public abstract class Vehicle {
         state = VehicleState.STOPPED;
     }
 
+    public void nudgeAside(double distance) {
+        switch (direction) {
+            case NORTH:
+            case SOUTH:
+                position.setX(position.getX() + distance);
+                break;
+            case EAST:
+            case WEST:
+                position.setY(position.getY() + distance);
+                break;
+        }
+    }
+
     public abstract void update();
 
     public String getId() {

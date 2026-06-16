@@ -16,6 +16,8 @@ public class SimulationController {
 
         trafficController = new TrafficController();
 
+        vehicleController.setTrafficLights(trafficController.getTrafficLights());
+
         inputController = new InputController();
 
         running = false;

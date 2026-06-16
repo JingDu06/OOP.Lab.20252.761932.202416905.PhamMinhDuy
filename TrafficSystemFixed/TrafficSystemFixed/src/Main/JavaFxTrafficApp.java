@@ -1,22 +1,30 @@
 package Main;
 
+import controller.LightControlMode;
 import controller.SimulationController;
+import controller.TrafficDensity;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import model.map.TrafficMapType;
 import model.trafficlight.BasicTrafficLight;
+import model.trafficlight.CountdownTrafficLight;
+import model.trafficlight.SmartTrafficLight;
 import model.vehicle.Vehicle;
 import model.vehicle.VehicleFactory;
+import strategy.AggressiveDriver;
 import strategy.EmergencyDriver;
 import strategy.NormalDriver;
 import util.Direction;
 import util.Vector2D;
+import view.renderer.DisplayMode;
 import view.screen.JavaFxSimulationScreen;
 
 public class JavaFxTrafficApp extends Application {
@@ -36,6 +44,10 @@ public class JavaFxTrafficApp extends Application {
     private long lastFrame;
 
     private int tick;
+    private TrafficMapType selectedMap = TrafficMapType.CROSS_JUNCTION;
+    private TrafficDensity selectedDensity = TrafficDensity.LIGHT;
+    private DisplayMode selectedDisplay = DisplayMode.BASIC;
+    private LightControlMode selectedControl = LightControlMode.AUTOMATIC;
 
     @Override
     public void start(Stage stage) {
@@ -46,12 +58,34 @@ public class JavaFxTrafficApp extends Application {
         Button startButton = new Button("Start");
         Button pauseButton = new Button("Pause");
         Button resetButton = new Button("Reset");
+        ComboBox<TrafficMapType> mapBox = new ComboBox<>();
+        mapBox.getItems().addAll(TrafficMapType.values());
+        mapBox.setValue(selectedMap);
+        ComboBox<TrafficDensity> densityBox = new ComboBox<>();
+        densityBox.getItems().addAll(TrafficDensity.values());
+        densityBox.setValue(selectedDensity);
+        ComboBox<DisplayMode> displayBox = new ComboBox<>();
+        displayBox.getItems().addAll(DisplayMode.values());
+        displayBox.setValue(selectedDisplay);
+        ComboBox<LightControlMode> controlBox = new ComboBox<>();
+        controlBox.getItems().addAll(LightControlMode.values());
+        controlBox.setValue(selectedControl);
 
         startButton.setOnAction(event -> controller.start());
         pauseButton.setOnAction(event -> controller.stop());
         resetButton.setOnAction(event -> resetSimulation());
 
-        HBox toolbar = new HBox(10, startButton, pauseButton, resetButton, statusLabel);
+        mapBox.setOnAction(event -> { selectedMap = mapBox.getValue(); resetSimulation(); });
+        densityBox.setOnAction(event -> { selectedDensity = densityBox.getValue(); resetSimulation(); });
+        displayBox.setOnAction(event -> { selectedDisplay = displayBox.getValue(); simulationScreen.setDisplayMode(selectedDisplay); simulationScreen.render(tick); });
+        controlBox.setOnAction(event -> { selectedControl = controlBox.getValue(); controller.getTrafficController().setControlMode(selectedControl); });
+
+        HBox toolbar = new HBox(10, startButton, pauseButton, resetButton,
+                new Label("Bản đồ:"), mapBox,
+                new Label("Lưu lượng:"), densityBox,
+                new Label("Hiển thị:"), displayBox,
+                new Label("Đèn:"), controlBox,
+                statusLabel);
         toolbar.setPadding(new Insets(10));
 
         root = new BorderPane();
@@ -59,10 +93,7 @@ public class JavaFxTrafficApp extends Application {
         root.setCenter(simulationScreen);
 
         stage.setTitle("Traffic System JavaFX");
-        stage.setScene(new Scene(
-                root,
-                JavaFxSimulationScreen.WIDTH,
-                JavaFxSimulationScreen.HEIGHT + 50));
+        stage.setScene(new Scene(root, JavaFxSimulationScreen.WIDTH, JavaFxSimulationScreen.HEIGHT + 58));
         stage.show();
 
         simulationScreen.render(tick);
@@ -75,10 +106,8 @@ public class JavaFxTrafficApp extends Application {
             @Override
             public void handle(long now) {
 
-                if (now - lastFrame < FRAME_INTERVAL) {
-                    return;
-                }
 
+                if (now - lastFrame < FRAME_INTERVAL) return;
                 lastFrame = now;
 
                 if (controller.isRunning()) {
@@ -104,37 +133,70 @@ public class JavaFxTrafficApp extends Application {
     private void resetController() {
 
         controller = new SimulationController();
+        controller.getTrafficController().setControlMode(selectedControl);
         setupDemoScenario();
         simulationScreen = new JavaFxSimulationScreen(controller, statusLabel);
+        simulationScreen.setMapType(selectedMap);
+        simulationScreen.setDisplayMode(selectedDisplay);
         tick = 0;
     }
 
     private void setupDemoScenario() {
+        controller.getTrafficController().addTrafficLight(new BasicTrafficLight("TL-Basic"));
+        controller.getTrafficController().addTrafficLight(new CountdownTrafficLight("TL-Count"));
+        controller.getTrafficController().addTrafficLight(new SmartTrafficLight("TL-10s"));
 
-        controller.getTrafficController().addTrafficLight(new BasicTrafficLight("TL-01"));
+        String[] types = {"CAR", "MOTORBIKE", "BICYCLE", "AMBULANCE", "FIRETRUCK"};
+        Direction[] directions = {Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH};
+        Vector2D[] starts = {
+                new Vector2D(70, 350), new Vector2D(830, 350),
+                new Vector2D(450, 650), new Vector2D(450, 60)
+        };
 
-        Vehicle car = VehicleFactory.createVehicle(
-                "CAR", "CAR-01", new Vector2D(100, 350), Direction.EAST);
-        car.setStrategy(new NormalDriver());
-        controller.getVehicleController().addVehicle(car);
+        for (int i = 0; i < selectedDensity.getVehicleCount(); i++) {
+            String type = types[i % types.length];
+            Direction direction = directions[i % directions.length];
+            Vector2D base = starts[i % starts.length];
+            Vehicle vehicle = VehicleFactory.createVehicle(type, typeLabel(type) + "-" + (i + 1),
+                    new Vector2D(base.getX() - laneSpacing(direction, i), base.getY() - laneSpacingY(direction, i)), direction);
+            if (type.equals("AMBULANCE") || type.equals("FIRETRUCK")) {
+                vehicle.setStrategy(new EmergencyDriver());
+            } else if (i % 4 == 0) {
+                vehicle.setStrategy(new AggressiveDriver());
+            } else {
+                vehicle.setStrategy(new NormalDriver());
+            }
+            controller.getVehicleController().addVehicle(vehicle);
+        }
+    }
 
-        Vehicle motorbike = VehicleFactory.createVehicle(
-                "MOTORBIKE", "MOTO-01", new Vector2D(780, 300), Direction.WEST);
-        motorbike.setStrategy(new NormalDriver());
-        controller.getVehicleController().addVehicle(motorbike);
+    private double laneSpacing(Direction direction, int index) {
+        if (direction == Direction.EAST) return index * 42;
+        if (direction == Direction.WEST) return -index * 42;
+        return (index % 2) * 26;
+    }
 
-        Vehicle ambulance = VehicleFactory.createVehicle(
-                "AMBULANCE", "AMB-01", new Vector2D(450, 620), Direction.NORTH);
-        ambulance.setStrategy(new EmergencyDriver());
-        controller.getVehicleController().addVehicle(ambulance);
+    private double laneSpacingY(Direction direction, int index) {
+        if (direction == Direction.NORTH) return -index * 42;
+        if (direction == Direction.SOUTH) return index * 42;
+        return (index % 2) * 24;
+    }
+
+        
+    private String typeLabel(String type) {
+        switch (type) {
+            case "MOTORBIKE": return "MOTO";
+            case "BICYCLE": return "BIKE";
+            case "AMBULANCE": return "AMB";
+            case "FIRETRUCK": return "FIRE";
+            default: return "CAR";
+        }
     }
 
     @Override
     public void stop() {
 
-        if (timer != null) {
-            timer.stop();
-        }
+        if (timer != null) timer.stop();
     }
 
     public static void main(String[] args) {
