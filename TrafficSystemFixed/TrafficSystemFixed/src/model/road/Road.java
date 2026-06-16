@@ -1,6 +1,7 @@
 package model.road;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Road {
@@ -38,7 +39,7 @@ public class Road {
 
     public List<Lane> getLanes() {
 
-        return lanes;
+         return Collections.unmodifiableList(lanes);
     }
 
     public int getTotalVehicleCount() {

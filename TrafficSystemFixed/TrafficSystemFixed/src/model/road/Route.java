@@ -1,6 +1,7 @@
 package model.road;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Route {
@@ -26,7 +27,7 @@ public class Route {
 
     public List<Road> getRoads() {
 
-        return roads;
+        return Collections.unmodifiableList(roads);
     }
 
     public String getId() {

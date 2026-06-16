@@ -67,15 +67,48 @@ public class Lane {
     public Vehicle getFrontVehicle(
             Vehicle currentVehicle) {
 
-        int index =
-                vehicles.indexOf(currentVehicle);
-
-        if(index > 0) {
-
-            return vehicles.get(index - 1);
+    if (currentVehicle == null || !vehicles.contains(currentVehicle)) {
+            return null;
         }
 
-        return null;
+        Vehicle frontVehicle = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (Vehicle vehicle : vehicles) {
+            if (vehicle == currentVehicle) {
+                continue;
+            }
+        double distance = distanceInFront(currentVehicle, vehicle);
+
+        if (distance >= 0 && distance < nearestDistance) {
+                nearestDistance = distance;
+                frontVehicle = vehicle;
+            }
+        }
+
+        return frontVehicle;
+    }
+
+    private double distanceInFront(
+            Vehicle currentVehicle,
+            Vehicle candidate) {
+
+        switch (direction) {
+            case NORTH:
+                return currentVehicle.getPosition().getY()
+                        - candidate.getPosition().getY();
+            case SOUTH:
+                return candidate.getPosition().getY()
+                        - currentVehicle.getPosition().getY();
+            case EAST:
+                return candidate.getPosition().getX()
+                        - currentVehicle.getPosition().getX();
+            case WEST:
+                return currentVehicle.getPosition().getX()
+                        - candidate.getPosition().getX();
+            default:
+                return -1;
+        }
     }
 
     public double getCongestionLevel() {

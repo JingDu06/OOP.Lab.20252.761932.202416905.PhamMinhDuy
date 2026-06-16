@@ -1,6 +1,7 @@
 package model.map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import model.junction.Junction;
@@ -46,17 +47,17 @@ public class Map {
 
     public List<Road> getRoads() {
 
-        return roads;
+        return Collections.unmodifiableList(roads);
     }
 
     public List<Junction> getJunctions() {
 
-        return junctions;
+        return Collections.unmodifiableList(junctions);
     }
 
     public List<SpawnPoint> getSpawnPoints() {
 
-        return spawnPoints;
+        return Collections.unmodifiableList(spawnPoints);
     }
 
     public String getName() {

@@ -58,10 +58,18 @@ public abstract class Vehicle {
 
     public void accelerate() {
         speed = Math.min(maxSpeed, speed + acceleration);
+
+        if (speed > 0) {
+            state = VehicleState.MOVING;
+        }
     }
 
     public void brake() {
         speed = Math.max(0, speed - acceleration);
+
+        if (speed == 0) {
+            state = VehicleState.STOPPED;
+        }
     }
 
     public void stop() {

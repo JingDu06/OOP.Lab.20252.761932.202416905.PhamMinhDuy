@@ -1,6 +1,7 @@
 package model.road;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import model.junction.Junction;
@@ -37,12 +38,12 @@ public class RoadNetwork {
 
     public List<Road> getRoads() {
 
-        return roads;
+        return Collections.unmodifiableList(roads);
     }
 
     public List<Junction> getJunctions() {
 
-        return junctions;
+        return Collections.unmodifiableList(junctions);
     }
 
     public int getTotalVehicleCount() {

@@ -8,7 +8,7 @@ public class NormalDriver implements DrivingStrategy {
     @Override
     public void drive(Vehicle vehicle) {
 
-        if (vehicle.getState() != VehicleState.STOPPED) {
+        if (vehicle.getState() != VehicleState.WAITING) {
 
             vehicle.accelerate();
         }

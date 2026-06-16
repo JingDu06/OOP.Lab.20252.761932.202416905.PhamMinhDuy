@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import model.trafficlight.TrafficLight;
@@ -28,7 +29,7 @@ public class TrafficController {
     }
 
     public List<TrafficLight> getTrafficLights() {
-        return trafficLights;
+        return Collections.unmodifiableList(trafficLights);
     }
 
     public void updateLights() {
