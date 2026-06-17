@@ -1,0 +1,10 @@
+Smooth lane-change update
+
+- Vehicles no longer snap/teleport from their current lane into a turn lane.
+- LEFT/RIGHT vehicles begin changing lane about 350 px before the intersection.
+- Lane change follows an S-curve (smoothstep) while the vehicle continues moving forward.
+- The vehicle rotates gradually during the lane change, then straightens before turning.
+- A lane change only starts when the target lane has a safe front and rear gap.
+- If the target lane is temporarily occupied, the vehicle stays in its current lane and slows gently.
+- Turning starts only after the vehicle has completed the lane change.
+- Ordinary lane-centering correction is gradual, not an instant coordinate clamp.

@@ -1,0 +1,45 @@
+SPRITE GRAPHICS + SEPARATED LOGIC/RENDERING
+===========================================
+
+1. Simulation / coordinate logic (NO JavaFX image code)
+   - src/model/vehicle/Vehicle.java
+   - src/controller/VehicleController.java
+   These classes calculate position, speed, heading, turning, collision avoidance,
+   lane changes and emergency yielding.
+
+2. Presentation boundary
+   - src/view/adapter/VehicleRenderAdapter.java
+   - src/view/presentation/VehicleRenderState.java
+   The adapter copies the current model values into an immutable snapshot.
+   Drawing code cannot change the real vehicle coordinates.
+
+3. Drawing only
+   - src/view/component/JavaFxVehicleView.java
+   - src/view/renderer/VehicleSpriteStore.java
+   JavaFxVehicleView only draws the snapshot. It never calls move(), brake(),
+   accelerate(), setPosition(), setDirection() or any route/collision method.
+
+4. Sprite resources
+   - src/main/resources/assets/vehicles/car.png
+   - src/main/resources/assets/vehicles/motorbike.png
+   - src/main/resources/assets/vehicles/bicycle.png
+   - src/main/resources/assets/vehicles/bus.png
+   - src/main/resources/assets/vehicles/ambulance.png
+   - src/main/resources/assets/vehicles/firetruck.png
+
+All PNG sprites face EAST. The renderer rotates the canvas by
+Vehicle.visualHeadingDegrees, so the sprite follows straight movement,
+lane changes and turns smoothly.
+
+Ambulance flashing lights
+-------------------------
+The ambulance base image stays unchanged. JavaFxVehicleView draws alternating
+red/blue light overlays only when Ambulance.isSirenOn() is true. This animation
+is visual-only and does not modify traffic logic.
+
+Run
+---
+mvn javafx:run
+
+The default display mode is now "Sprite xe". The toolbar can still switch to
+"Basic" as a fallback.

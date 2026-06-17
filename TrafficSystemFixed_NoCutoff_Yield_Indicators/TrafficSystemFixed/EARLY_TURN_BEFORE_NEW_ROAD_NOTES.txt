@@ -1,0 +1,8 @@
+EARLY TURN BEFORE NEW ROAD
+==========================
+
+- Xe bắt đầu đánh lái sớm hơn trước miệng nhánh đường mới.
+- Điểm điều khiển đầu của Bezier được kéo gần xe để đầu xe xoay sớm, không chạy thẳng sâu rồi mới rẽ.
+- Cung rẽ kết thúc ngay đầu làn mới; sau đó xe mới chuyển sang chuyển động thẳng.
+- Xe dài (bus/fire truck/ambulance) có bán kính và đoạn trả lái dài hơn nhưng vẫn không teleport.
+- Các kiểm tra khoảng cách an toàn và vùng rẽ vẫn được giữ nguyên.

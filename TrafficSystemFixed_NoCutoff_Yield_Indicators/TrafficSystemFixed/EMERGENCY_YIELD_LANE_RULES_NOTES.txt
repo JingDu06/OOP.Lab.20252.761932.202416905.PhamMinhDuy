@@ -1,0 +1,19 @@
+CẬP NHẬT NHƯỜNG XE ƯU TIÊN VÀ QUY TẮC LÀN
+
+1. Khi xe cứu thương hoặc xe cứu hỏa bật còi và tiến đến từ phía sau:
+   - Xe thường tìm làn bên phải kế tiếp.
+   - Chỉ đổi làn khi có đủ khoảng trống trước và sau.
+   - Đổi làn theo đường cong chữ S, không dịch chuyển tức thời.
+   - Nếu không có khoảng trống hoặc đã ở làn phải nhất, xe giảm tốc để nhường.
+
+2. Xe cứu thương/cứu hỏa vẫn giữ khoảng cách:
+   - Không xuyên hoặc đè lên xe trước.
+   - Nếu khoảng cách quá gần thì giảm tốc hoặc dừng.
+
+3. Quy tắc loại xe:
+   - Ô tô, xe máy, xe buýt, xe cứu thương và xe cứu hỏa có thể dùng cả 3 làn.
+   - Xe đạp chỉ được spawn và chạy ở làn trong/phải nhất.
+
+4. Chống chồng xe khi đổi làn:
+   - Mỗi bước chuyển làn đều kiểm tra vị trí dự kiến.
+   - Nếu không an toàn, xe giữ vị trí cũ và giảm tốc; không teleport.
